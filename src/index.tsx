@@ -9,10 +9,10 @@ import {
 import {
   addEventListener,
   removeEventListener,
-  //callable,
+  callable,
   definePlugin,
   toaster,
-  //call,
+  // call,
   // routerHook
 } from "@decky/api"
 import { Settings } from "./util";
@@ -20,12 +20,11 @@ import { useState } from "react";
 import { FaShip } from "react-icons/fa";
 
 // import logo from "../assets/logo.png";
-
-// This function calls the python function "start_timer", which takes in no arguments and returns nothing.
-// It starts a (python) timer which eventually emits the event 'timer_event'
-// let volume = await call<[], number>('get_volume');
+const get_volume = callable<[], number>('get_volume');
+let baseVolumn = await get_volume();
 
 function Content() {
+  Settings.setVolume(baseVolumn);
   const [volume, setVolume] = useState<number>(
     Settings.getVolume()
   );
