@@ -53,6 +53,22 @@ class Plugin:
         decky.logger.info(f"Volume Output: {volume}")
         return volume
 
+    async def set_volume(self, volume: int):
+        exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "adjust_get_current_system_volume_vista_plus.exe")
+        decky.logger.info(f"Executing EXE at: {exe_path} with volume {volume}")
+
+        # Execute the EXE and capture output & exit code
+        result = subprocess.run(
+            [exe_path, str(volume)],
+            capture_output=True,
+            text=True
+        )
+
+        if result.returncode != 0:
+            decky.logger.error(f"Failed to set volume: {result.stderr.strip()}")
+
+        decky.logger.info("Volume set successfully")
+
     # Migrations that should be performed before entering `_main()`.
     async def _migration(self):
         decky.logger.info("Migrating")

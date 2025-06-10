@@ -4,8 +4,12 @@
 //   JsonSerializer,
 // } from "typescript-json-serializer";
 
+import { callable } from "@decky/api";
+
 //const SETTINGS_KEY = "DeckyWindowsTools";
 //const serializer = new JsonSerializer();
+
+const set_volume = callable<[number], void>('set_volume');
 
 //@JsonObject()
 export class SystemSetting {
@@ -45,6 +49,7 @@ export class Settings {
   static setVolume(volume: number) {
     if (this.instance.system.volume != volume) {
       this.instance.system.volume = volume;
+      set_volume(volume);
       // Settings.saveSettingsToLocalStorage();
     }
   }

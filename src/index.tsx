@@ -21,6 +21,7 @@ import { FaShip } from "react-icons/fa";
 
 // import logo from "../assets/logo.png";
 const get_volume = callable<[], number>('get_volume');
+// const set_volume = callable<[number], void>('set_volume');
 let baseVolumn = await get_volume();
 
 function Content() {
@@ -42,6 +43,7 @@ function Content() {
           onChange={(value: number) => {
             console.log("Volume changed to:", value);
             setVolume(value);
+            baseVolumn = value;
             Settings.setVolume(value);
           }}>
         </SliderField>
