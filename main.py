@@ -50,7 +50,6 @@ class Plugin:
 
     async def get_volume(self):
         exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "adjust_get_current_system_volume_vista_plus.exe")
-        decky.logger.info(f"Executing EXE at: {exe_path}")
 
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -67,7 +66,6 @@ class Plugin:
 
     async def set_volume(self, volume: int):
         exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "adjust_get_current_system_volume_vista_plus.exe")
-        decky.logger.info(f"Executing EXE at: {exe_path} with volume {volume}")
 
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -82,6 +80,43 @@ class Plugin:
             decky.logger.error(f"Failed to set volume: {result.stderr.strip()}")
 
         decky.logger.info("Volume set successfully")
+
+    async def get_brightness(self):
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        result = subprocess.run(
+            ["powershell", "-Command", "Get-Ciminstance -Namespace root/WMI -ClassName WmiMonitorBrightness | Select -ExpandProperty \"CurrentBrightness\""],
+            capture_output=True,
+            text=True,
+            startupinfo=si
+        )
+
+        decky.logger.info(f"STDOUT: {result.stdout}")
+
+        try:
+            brightness = int(result.stdout.strip())
+        except ValueError:
+            brightness = 0
+            print("Can't convert {result.stdout} to int")
+
+        decky.logger.info(f"Brightness: {brightness}")
+        return brightness
+
+    async def set_brightness(self, brightness: int):
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        # powershell -Command "(Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1,70)"
+        result = subprocess.run(
+            ["powershell", "-Command", f"(Get-WmiObject -Namespace root/WMI -Class WmiMonitorBrightnessMethods).WmiSetBrightness(1,{brightness})"],
+            capture_output=True,
+            text=True,
+            startupinfo=si
+        )
+
+        if result.returncode != 0:
+            decky.logger.error(f"Failed to set brightness: {result.stderr.strip()}")
+
+        decky.logger.info("Brightness set successfully")
 
     # Migrations that should be performed before entering `_main()`.
     async def _migration(self):

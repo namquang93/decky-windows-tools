@@ -20,14 +20,19 @@ import { useState } from "react";
 import { FaShip } from "react-icons/fa";
 
 // import logo from "../assets/logo.png";
-const get_volume = callable<[], number>('get_volume');
+// const get_volume = callable<[], number>('get_volume');
 // const set_volume = callable<[number], void>('set_volume');
-let baseVolumn = await get_volume();
+let baseVolumn = await callable<[], number>('get_volume')();
+let baseBrightness = await callable<[], number>('get_brightness')();
 
 function Content() {
   Settings.setVolume(baseVolumn);
+  Settings.setBrightness(baseBrightness);
   const [volume, setVolume] = useState<number>(
     Settings.getVolume()
+  );
+  const [brightness, setBrightness] = useState<number>(
+    Settings.getBrightness()
   );
 
   return (
@@ -51,9 +56,17 @@ function Content() {
       <PanelSectionRow>
         <SliderField
           label="Brightness"
+          showValue={true}
           min={0}
-          max={100} value={0}
-          step={1}>
+          max={100}
+          value={brightness}
+          step={10}
+          onChange={(value: number) => {
+            console.log("Brightness changed to:", value);
+            setBrightness(value);
+            baseBrightness = value;
+            Settings.setBrightness(value);
+          }}>
         </SliderField>
       </PanelSectionRow>
 

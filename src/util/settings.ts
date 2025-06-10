@@ -10,19 +10,25 @@ import { callable } from "@decky/api";
 //const serializer = new JsonSerializer();
 
 const set_volume = callable<[number], void>('set_volume');
+const set_brightness = callable<[number], void>('set_brightness');
 
 //@JsonObject()
 export class SystemSetting {
   //@JsonProperty()
   public volume: number;
 
+  //@JsonProperty()
+  public brightness: number;
+
   constructor() {
     this.volume = 20;
+    this.brightness = 50;
   }
 
   deepCopy(copyTarget: SystemSetting) {
     // this.overwrite=copyTarget.overwrite;
     this.volume = copyTarget.volume;
+    this.brightness = copyTarget.brightness;
   }
 }
 
@@ -56,5 +62,17 @@ export class Settings {
 
   static getVolume() {
     return this.instance.system.volume;
+  }
+
+  static setBrightness(brightness: number) {
+    if (this.instance.system.brightness != brightness) {
+      this.instance.system.brightness = brightness;
+      set_brightness(brightness);
+      // Settings.saveSettingsToLocalStorage();
+    }
+  }
+
+  static getBrightness() {
+    return this.instance.system.brightness;
   }
 }
