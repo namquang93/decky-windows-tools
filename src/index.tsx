@@ -9,12 +9,13 @@ import {
 import {
   addEventListener,
   removeEventListener,
-  callable,
+  //callable,
   definePlugin,
   toaster,
-  call,
+  //call,
   // routerHook
 } from "@decky/api"
+import { Settings } from "./util";
 import { useState } from "react";
 import { FaShip } from "react-icons/fa";
 
@@ -25,25 +26,24 @@ import { FaShip } from "react-icons/fa";
 // let volume = await call<[], number>('get_volume');
 
 function Content() {
-  const [result, setResult] = useState<number | undefined>();
-  const [volume, setVolume] = useState<number>(50);
-
-  // const onClick = async () => {
-  //   const result = await add(Math.random(), Math.random());
-  //   setResult(result);
-  // };
+  const [volume, setVolume] = useState<number>(
+    Settings.getVolume()
+  );
 
   return (
     <PanelSection title="System">
       <PanelSectionRow>
         <SliderField
-          label="Volume"
+          label={"Volume"}
+          showValue={true}
           min={0}
           max={100}
           value={volume}
           step={1}
           onChange={(value: number) => {
             console.log("Volume changed to:", value);
+            setVolume(value);
+            Settings.setVolume(value);
           }}>
         </SliderField>
       </PanelSectionRow>
