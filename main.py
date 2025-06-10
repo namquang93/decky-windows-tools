@@ -38,15 +38,27 @@ class Plugin:
     async def start_timer(self):
         self.loop.create_task(self.long_running())
 
+    # def subprocess_run_hidden(command, **kwargs):
+    #     if os.name == 'nt':
+    #         startupinfo = subprocess.STARTUPINFO()
+    #         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    #         startupinfo.wShowWindow = subprocess.SW_HIDE
+    #         kwargs['startupinfo'] = startupinfo
+    #     else:
+    #         decky.logger.warning("Subprocess run hidden is only implemented for Windows.")
+    #     return subprocess.run(command, **kwargs)
+
     async def get_volume(self):
         exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "adjust_get_current_system_volume_vista_plus.exe")
         decky.logger.info(f"Executing EXE at: {exe_path}")
 
-        # Execute the EXE and capture output & exit code
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         result = subprocess.run(
             [exe_path],
             capture_output=True,
-            text=True
+            text=True,
+            startupinfo=si
         )
 
         volume = int(result.stdout.strip())
@@ -57,11 +69,13 @@ class Plugin:
         exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "adjust_get_current_system_volume_vista_plus.exe")
         decky.logger.info(f"Executing EXE at: {exe_path} with volume {volume}")
 
-        # Execute the EXE and capture output & exit code
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         result = subprocess.run(
             [exe_path, str(volume)],
             capture_output=True,
-            text=True
+            text=True,
+            startupinfo=si
         )
 
         if result.returncode != 0:
