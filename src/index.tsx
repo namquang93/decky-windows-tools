@@ -2,6 +2,7 @@ import {
   ButtonItem,
   PanelSection,
   PanelSectionRow,
+  SliderField,
   Navigation,
   staticClasses
 } from "@decky/ui";
@@ -11,6 +12,7 @@ import {
   callable,
   definePlugin,
   toaster,
+  call,
   // routerHook
 } from "@decky/api"
 import { useState } from "react";
@@ -18,41 +20,40 @@ import { FaShip } from "react-icons/fa";
 
 // import logo from "../assets/logo.png";
 
-// This function calls the python function "add", which takes in two numbers and returns their sum (as a number)
-// Note the type annotations:
-//  the first one: [first: number, second: number] is for the arguments
-//  the second one: number is for the return value
-const add = callable<[first: number, second: number], number>("add");
-
 // This function calls the python function "start_timer", which takes in no arguments and returns nothing.
 // It starts a (python) timer which eventually emits the event 'timer_event'
-const startTimer = callable<[], void>("start_timer");
+// let volume = await call<[], number>('get_volume');
 
 function Content() {
   const [result, setResult] = useState<number | undefined>();
+  const [volume, setVolume] = useState<number>(50);
 
-  const onClick = async () => {
-    const result = await add(Math.random(), Math.random());
-    setResult(result);
-  };
+  // const onClick = async () => {
+  //   const result = await add(Math.random(), Math.random());
+  //   setResult(result);
+  // };
 
   return (
-    <PanelSection title="Panel Section">
+    <PanelSection title="System">
       <PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={onClick}
-        >
-          {result ?? "Add two numbers via Python"}
-        </ButtonItem>
+        <SliderField
+          label="Volume"
+          min={0}
+          max={100}
+          value={volume}
+          step={1}
+          onChange={(value: number) => {
+            console.log("Volume changed to:", value);
+          }}>
+        </SliderField>
       </PanelSectionRow>
       <PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={() => startTimer()}
-        >
-          {"Start Python timer"}
-        </ButtonItem>
+        <SliderField
+          label="Brightness"
+          min={0}
+          max={100} value={0}
+          step={1}>
+        </SliderField>
       </PanelSectionRow>
 
       {/* <PanelSectionRow>
@@ -61,7 +62,7 @@ function Content() {
         </div>
       </PanelSectionRow> */}
 
-      {/*<PanelSectionRow>
+      {<PanelSectionRow>
         <ButtonItem
           layout="below"
           onClick={() => {
@@ -71,7 +72,7 @@ function Content() {
         >
           Router
         </ButtonItem>
-      </PanelSectionRow>*/}
+      </PanelSectionRow>}
     </PanelSection>
   );
 };
@@ -98,7 +99,7 @@ export default definePlugin(() => {
 
   return {
     // The name shown in various decky menus
-    name: "Test Plugin",
+    name: "Decky Windows Tools",
     // The element displayed at the top of your plugin's menu
     titleView: <div className={staticClasses.Title}>Decky Windows Tools</div>,
     // The content of your plugin's menu

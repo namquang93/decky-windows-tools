@@ -5,6 +5,8 @@ import os
 # and add the `decky-loader/plugin/imports` path to `python.analysis.extraPaths` in `.vscode/settings.json`
 import decky
 import asyncio
+import os
+import subprocess
 
 class Plugin:
     # A normal method. It can be called from the TypeScript side using @decky/api.
@@ -35,6 +37,21 @@ class Plugin:
 
     async def start_timer(self):
         self.loop.create_task(self.long_running())
+
+    async def get_volume(self):
+        exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "adjust_get_current_system_volume_vista_plus.exe")
+        decky.logger.info(f"Executing EXE at: {exe_path}")
+
+        # Execute the EXE and capture output & exit code
+        result = subprocess.run(
+            [exe_path],
+            capture_output=True,
+            text=True
+        )
+
+        volume = int(result.stdout.strip())
+        decky.logger.info(f"Volume Output: {volume}")
+        return volume
 
     # Migrations that should be performed before entering `_main()`.
     async def _migration(self):
