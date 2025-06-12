@@ -11,6 +11,7 @@ import { callable } from "@decky/api";
 
 const set_volume = callable<[number], void>('set_volume');
 const set_brightness = callable<[number], void>('set_brightness');
+const set_osd = callable<[number], void>('set_osd');
 
 //@JsonObject()
 export class SystemSetting {
@@ -83,5 +84,13 @@ export class Settings {
 
   static getOSD() {
     return this.instance.system.osd;
+  }
+
+  static setOSD(osd: number) {
+    if (this.instance.system.osd != osd) {
+      this.instance.system.osd = osd;
+      set_osd(osd);
+      // Settings.saveSettingsToLocalStorage();
+    }
   }
 }

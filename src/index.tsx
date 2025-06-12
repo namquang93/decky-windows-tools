@@ -24,10 +24,12 @@ import { FaShip } from "react-icons/fa";
 // const set_volume = callable<[number], void>('set_volume');
 let baseVolumn = await callable<[], number>('get_volume')();
 let baseBrightness = await callable<[], number>('get_brightness')();
+let baseOSD = await callable<[], number>('get_osd')();
 
 function Content() {
   Settings.setVolume(baseVolumn);
   Settings.setBrightness(baseBrightness);
+  Settings.setOSD(baseOSD);
   const [volume, setVolume] = useState<number>(
     Settings.getVolume()
   );
@@ -93,8 +95,8 @@ function Content() {
           onChange={(value: number) => {
             console.log("OSD changed to:", value);
             setOSD(value);
-            //baseVolumn = value;
-            //Settings.setVolume(value);
+            baseOSD = value;
+            Settings.setOSD(value);
           }}>
         </SliderField>
       </PanelSectionRow>

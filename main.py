@@ -118,13 +118,13 @@ class Plugin:
 
         decky.logger.info("Brightness set successfully")
 
-    async def get_overlay(self):
+    async def get_osd(self):
         exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "rtss-cli.exe")
 
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         result = subprocess.run(
-            [exe_path],
+            [exe_path, "overlay:get"],
             capture_output=True,
             text=True,
             startupinfo=si
@@ -132,7 +132,27 @@ class Plugin:
 
         overlay_value = int(result.stdout.strip())
         decky.logger.info(f"Overlay: {overlay_value}")
-        return overlay_value == 1
+        return overlay_value
+    
+    async def set_osd(self, value: int):
+        exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "rtss-cli.exe")
+
+        enabled = 0 if value == 0 else 1
+        decky.logger.info(f"Setting overlay to {enabled}")
+
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        result = subprocess.run(
+            [exe_path, "overlay:set", str(enabled)],
+            capture_output=True,
+            text=True,
+            startupinfo=si
+        )
+
+        if result.returncode != 0:
+            decky.logger.error(f"Failed to set overlay: {result.stderr.strip()}")
+
+        decky.logger.info("Overlay set successfully")
 
     # Migrations that should be performed before entering `_main()`.
     async def _migration(self):
