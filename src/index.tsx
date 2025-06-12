@@ -34,8 +34,11 @@ function Content() {
   const [brightness, setBrightness] = useState<number>(
     Settings.getBrightness()
   );
+  const [osd, setOSD] = useState<number>(
+    Settings.getOSD()
+  );
 
-  return (
+  return [
     <PanelSection title="System">
       <PanelSectionRow>
         <SliderField
@@ -69,8 +72,34 @@ function Content() {
           }}>
         </SliderField>
       </PanelSectionRow>
+    </PanelSection>,
+    <PanelSection title="OSD">
+      <PanelSectionRow>
+        <SliderField
+          label={"Overlay"}
+          showValue={true}
+          min={0}
+          max={4}
+          notchCount={5}
+          notchLabels={[
+            { notchIndex: 0, label: "Off" },
+            { notchIndex: 1, label: "FPS" },
+            { notchIndex: 2, label: "FPS + Battery" },
+            { notchIndex: 3, label: "Detailed" },
+            { notchIndex: 4, label: "Full" }
+          ]}
+          value={osd}
+          step={1}
+          onChange={(value: number) => {
+            console.log("OSD changed to:", value);
+            setOSD(value);
+            //baseVolumn = value;
+            //Settings.setVolume(value);
+          }}>
+        </SliderField>
+      </PanelSectionRow>
     </PanelSection>
-  );
+  ];
 };
 
 export default definePlugin(() => {

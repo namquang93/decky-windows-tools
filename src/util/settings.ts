@@ -20,15 +20,20 @@ export class SystemSetting {
   //@JsonProperty()
   public brightness: number;
 
+  //@JsonProperty()
+  public osd: number;
+
   constructor() {
     this.volume = 20;
     this.brightness = 50;
+    this.osd = 0;
   }
 
   deepCopy(copyTarget: SystemSetting) {
     // this.overwrite=copyTarget.overwrite;
     this.volume = copyTarget.volume;
     this.brightness = copyTarget.brightness;
+    this.osd = copyTarget.osd;
   }
 }
 
@@ -74,5 +79,9 @@ export class Settings {
 
   static getBrightness() {
     return this.instance.system.brightness;
+  }
+
+  static getOSD() {
+    return this.instance.system.osd;
   }
 }
