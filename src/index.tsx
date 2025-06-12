@@ -1,9 +1,9 @@
 import {
-  ButtonItem,
+  //ButtonItem,
   PanelSection,
   PanelSectionRow,
   SliderField,
-  Navigation,
+  //Navigation,
   staticClasses
 } from "@decky/ui";
 import {
@@ -69,24 +69,6 @@ function Content() {
           }}>
         </SliderField>
       </PanelSectionRow>
-
-      {/* <PanelSectionRow>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <img src={logo} />
-        </div>
-      </PanelSectionRow> */}
-
-      {<PanelSectionRow>
-        <ButtonItem
-          layout="below"
-          onClick={() => {
-            Navigation.Navigate("/decky-plugin-test");
-            Navigation.CloseSideMenus();
-          }}
-        >
-          Router
-        </ButtonItem>
-      </PanelSectionRow>}
     </PanelSection>
   );
 };
