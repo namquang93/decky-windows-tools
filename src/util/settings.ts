@@ -25,13 +25,17 @@ export class SystemSetting {
   //@JsonProperty()
   public osd: number;
 
+  //@JsonProperty()
   public osdSize: number;
+
+  public maxTDP: number;
 
   constructor() {
     this.volume = 20;
     this.brightness = 50;
     this.osd = 0;
     this.osdSize = 1;
+    this.maxTDP = 4;
   }
 
   deepCopy(copyTarget: SystemSetting) {
@@ -39,6 +43,8 @@ export class SystemSetting {
     this.volume = copyTarget.volume;
     this.brightness = copyTarget.brightness;
     this.osd = copyTarget.osd;
+    this.osdSize = copyTarget.osdSize;
+    this.maxTDP = copyTarget.maxTDP;
   }
 }
 
@@ -106,6 +112,17 @@ export class Settings {
     if (this.instance.system.osdSize != osdSize) {
       this.instance.system.osdSize = osdSize;
       set_osd_size(osdSize);
+      // Settings.saveSettingsToLocalStorage();
+    }
+  }
+
+  static getMaxTDP() {
+    return this.instance.system.maxTDP;
+  }
+
+  static setMaxTDP(maxTDP: number) {
+    if (this.instance.system.maxTDP != maxTDP) {
+      this.instance.system.maxTDP = maxTDP;
       // Settings.saveSettingsToLocalStorage();
     }
   }

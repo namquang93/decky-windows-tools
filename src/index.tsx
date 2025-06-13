@@ -32,6 +32,8 @@ function Content() {
   Settings.setBrightness(baseBrightness);
   Settings.setOSD(baseOSD);
   Settings.setOSDSize(baseOSDSize);
+  Settings.setMaxTDP(20);
+
   const [volume, setVolume] = useState<number>(
     Settings.getVolume()
   );
@@ -43,6 +45,9 @@ function Content() {
   );
   const [osdSize, setOSDSize] = useState<number>(
     Settings.getOSDSize()
+  );
+  const [maxTDP, setMaxTDP] = useState<number>(
+    Settings.getMaxTDP()
   );
 
   return [
@@ -118,6 +123,25 @@ function Content() {
             Settings.setOSDSize(value);
           }}>
         </SliderField>
+      </PanelSectionRow>
+    </PanelSection>,
+    <PanelSection title="Performance">
+      <PanelSectionRow>
+        <SliderField
+          label={"Max TDP"}
+          showValue={true}
+          min={4}
+          max={28}
+          value={maxTDP}
+          step={1}
+          onChange={(value: number) => {
+            console.log("Max TDP changed to:", value);
+            setMaxTDP(value);
+            // baseOSD = value;
+            Settings.setMaxTDP(value);
+          }}>
+        </SliderField>
+        
       </PanelSectionRow>
     </PanelSection>
   ];
