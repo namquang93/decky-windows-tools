@@ -194,6 +194,21 @@ class Plugin:
 
         decky.logger.info("Overlay size set successfully")
 
+    async def set_max_tdp(self, value: int):
+        exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "ryzenadj", "ryzenadj.exe")
+
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        decky.logger.info(f"Run command: \"powershell Start-Process \"{exe_path}\" -ArgumentList \"--stapm-limit=10000\" -WindowStyle hidden -Wait -Verb RunAs")
+        result = subprocess.run(
+            ["powershell", "Start-Process", f"\"{exe_path}\"", "-ArgumentList \"--stapm-limit=10000\"", "-WindowStyle hidden", "-Wait", "-Verb RunAs"],
+            capture_output=True,
+            text=True,
+            startupinfo=si
+        )
+
+        decky.logger.info(f"Set TDP to {value}")
+
     # Migrations that should be performed before entering `_main()`.
     async def _migration(self):
         decky.logger.info("Migrating")

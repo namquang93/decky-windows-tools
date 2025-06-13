@@ -13,6 +13,7 @@ const set_volume = callable<[number], void>('set_volume');
 const set_brightness = callable<[number], void>('set_brightness');
 const set_osd = callable<[number], void>('set_osd');
 const set_osd_size = callable<[number], void>('set_osd_size');
+const set_max_tdp = callable<[number], void>('set_max_tdp');
 
 //@JsonObject()
 export class SystemSetting {
@@ -35,7 +36,7 @@ export class SystemSetting {
     this.brightness = 50;
     this.osd = 0;
     this.osdSize = 1;
-    this.maxTDP = 4;
+    this.maxTDP = 10;
   }
 
   deepCopy(copyTarget: SystemSetting) {
@@ -123,6 +124,7 @@ export class Settings {
   static setMaxTDP(maxTDP: number) {
     if (this.instance.system.maxTDP != maxTDP) {
       this.instance.system.maxTDP = maxTDP;
+      set_max_tdp(maxTDP);
       // Settings.saveSettingsToLocalStorage();
     }
   }

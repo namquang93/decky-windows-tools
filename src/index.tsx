@@ -32,7 +32,8 @@ function Content() {
   Settings.setBrightness(baseBrightness);
   Settings.setOSD(baseOSD);
   Settings.setOSDSize(baseOSDSize);
-  Settings.setMaxTDP(20);
+
+  //Settings.setMaxTDP(15);
 
   const [volume, setVolume] = useState<number>(
     Settings.getVolume()
@@ -141,7 +142,6 @@ function Content() {
             Settings.setMaxTDP(value);
           }}>
         </SliderField>
-        
       </PanelSectionRow>
     </PanelSection>
   ];
