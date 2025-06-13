@@ -97,7 +97,7 @@ class Plugin:
             brightness = int(result.stdout.strip())
         except ValueError:
             brightness = 0
-            print("Can't convert {result.stdout} to int")
+            print(f"Can't convert {result.stdout} to int")
 
         decky.logger.info(f"Brightness: {brightness}")
         return brightness
@@ -153,6 +153,46 @@ class Plugin:
             decky.logger.error(f"Failed to set overlay: {result.stderr.strip()}")
 
         decky.logger.info("Overlay set successfully")
+
+    async def get_osd_size(self):
+        exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "rtss-cli.exe")
+
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        result = subprocess.run(
+            [exe_path, "property:get", "Global", "ZoomRatio"],
+            capture_output=True,
+            text=True,
+            startupinfo=si
+        )
+
+        decky.logger.info(f"Overlay size: {result.stdout}")
+        try:
+            overlay_size = int(result.stdout.strip())
+        except ValueError:
+            overlay_size = 1
+            decky.logger.info(f"Can't convert {result.stdout} to int")
+        
+        return overlay_size
+    
+    async def set_osd_size(self, value: int):
+        exe_path = os.path.join(decky.DECKY_PLUGIN_DIR, "bin", "rtss-cli.exe")
+
+        decky.logger.info(f"Setting overlay size to {value}")
+
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        result = subprocess.run(
+            [exe_path, "property:set", "Global", "ZoomRatio", str(value)],
+            capture_output=True,
+            text=True,
+            startupinfo=si
+        )
+
+        if result.returncode != 0:
+            decky.logger.error(f"Failed to set overlay size: {result.stderr.strip()}")
+
+        decky.logger.info("Overlay size set successfully")
 
     # Migrations that should be performed before entering `_main()`.
     async def _migration(self):

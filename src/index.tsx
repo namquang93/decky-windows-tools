@@ -25,11 +25,13 @@ import { FaShip } from "react-icons/fa";
 let baseVolumn = await callable<[], number>('get_volume')();
 let baseBrightness = await callable<[], number>('get_brightness')();
 let baseOSD = await callable<[], number>('get_osd')();
+let baseOSDSize = await callable<[], number>('get_osd_size')();
 
 function Content() {
   Settings.setVolume(baseVolumn);
   Settings.setBrightness(baseBrightness);
   Settings.setOSD(baseOSD);
+  Settings.setOSDSize(baseOSDSize);
   const [volume, setVolume] = useState<number>(
     Settings.getVolume()
   );
@@ -38,6 +40,9 @@ function Content() {
   );
   const [osd, setOSD] = useState<number>(
     Settings.getOSD()
+  );
+  const [osdSize, setOSDSize] = useState<number>(
+    Settings.getOSDSize()
   );
 
   return [
@@ -86,7 +91,7 @@ function Content() {
           notchLabels={[
             { notchIndex: 0, label: "Off" },
             { notchIndex: 1, label: "FPS" },
-            { notchIndex: 2, label: "FPS + Battery" },
+            { notchIndex: 2, label: "Battery" },
             { notchIndex: 3, label: "Detailed" },
             { notchIndex: 4, label: "Full" }
           ]}
@@ -97,6 +102,20 @@ function Content() {
             setOSD(value);
             baseOSD = value;
             Settings.setOSD(value);
+          }}>
+        </SliderField>
+        <SliderField
+          label={"Overlay Size"}
+          showValue={true}
+          min={1}
+          max={6}
+          value={osdSize}
+          step={1}
+          onChange={(value: number) => {
+            console.log("OSD size changed to:", value);
+            setOSDSize(value);
+            baseOSDSize = value;
+            Settings.setOSDSize(value);
           }}>
         </SliderField>
       </PanelSectionRow>

@@ -12,6 +12,7 @@ import { callable } from "@decky/api";
 const set_volume = callable<[number], void>('set_volume');
 const set_brightness = callable<[number], void>('set_brightness');
 const set_osd = callable<[number], void>('set_osd');
+const set_osd_size = callable<[number], void>('set_osd_size');
 
 //@JsonObject()
 export class SystemSetting {
@@ -24,10 +25,13 @@ export class SystemSetting {
   //@JsonProperty()
   public osd: number;
 
+  public osdSize: number;
+
   constructor() {
     this.volume = 20;
     this.brightness = 50;
     this.osd = 0;
+    this.osdSize = 1;
   }
 
   deepCopy(copyTarget: SystemSetting) {
@@ -90,6 +94,18 @@ export class Settings {
     if (this.instance.system.osd != osd) {
       this.instance.system.osd = osd;
       set_osd(osd);
+      // Settings.saveSettingsToLocalStorage();
+    }
+  }
+
+  static getOSDSize() {
+    return this.instance.system.osdSize;
+  }
+
+  static setOSDSize(osdSize: number) {
+    if (this.instance.system.osdSize != osdSize) {
+      this.instance.system.osdSize = osdSize;
+      set_osd_size(osdSize);
       // Settings.saveSettingsToLocalStorage();
     }
   }
