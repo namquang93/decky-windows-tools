@@ -199,9 +199,9 @@ class Plugin:
 
         si = subprocess.STARTUPINFO()
         si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        decky.logger.info(f"Run command: \"powershell Start-Process \"{exe_path}\" -ArgumentList \"--stapm-limit=10000\" -WindowStyle hidden -Wait -Verb RunAs")
+        decky.logger.info(f"Run command: \"powershell Start-Process \"{exe_path}\" -ArgumentList \"--stapm-limit={str(value * 1000)}\",\"--fast-limit={str(value * 1000)}\",\"--slow-limit={str(value * 1000)}\" -WindowStyle hidden -Wait -Verb RunAs")
         result = subprocess.run(
-            ["powershell", "Start-Process", f"\"{exe_path}\"", "-ArgumentList \"--stapm-limit=10000\"", "-WindowStyle hidden", "-Wait", "-Verb RunAs"],
+            ["powershell", "Start-Process", f"\"{exe_path}\"", f"-ArgumentList \"--stapm-limit={str(value * 1000)}\",\"--fast-limit={str(value * 1000)}\",\"--slow-limit={str(value * 1000)}\"", "-WindowStyle hidden", "-Wait", "-Verb RunAs"],
             capture_output=True,
             text=True,
             startupinfo=si
